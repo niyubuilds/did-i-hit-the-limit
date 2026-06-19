@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250" font-family="-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101016"/>
+      <stop offset="1" stop-color="#17171e"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="760" height="250" rx="18" fill="url(#bg)"/>
+  <text x="28" y="44" font-size="15" fill="#8b8b95">Plan usage — pinned to your title bar, only when the app is in front</text>
+
+  <!-- Claude -->
+  <text x="28" y="114" font-size="16" font-weight="600" fill="#d2d2d9">Claude</text>
+  <rect x="120" y="88" width="500" height="38" rx="11" fill="#1a1a20" stroke="#34343c"/>
+  <circle cx="146" cy="107" r="6.5" fill="#30d158"/>
+  <text x="160" y="112" font-size="15" fill="#ffffff">5h 10%</text>
+  <text x="232" y="112" font-size="13" fill="#8a8a92">&#8635;5h</text>
+  <circle cx="292" cy="107" r="6.5" fill="#30d158"/>
+  <text x="306" y="112" font-size="15" fill="#ffffff">wk 14%</text>
+  <rect x="392" y="100" width="19" height="13" rx="2.5" fill="#5b8cff"/>
+  <rect x="392" y="103.5" width="19" height="2.4" fill="#ffffff" fill-opacity="0.55"/>
+  <text x="420" y="112" font-size="15" fill="#ffffff">$2.38</text>
+
+  <!-- Codex -->
+  <text x="28" y="174" font-size="16" font-weight="600" fill="#d2d2d9">Codex</text>
+  <rect x="120" y="148" width="500" height="38" rx="11" fill="#1a1a20" stroke="#34343c"/>
+  <circle cx="146" cy="167" r="6.5" fill="#30d158"/>
+  <text x="160" y="172" font-size="15" fill="#ffffff">5h 2%</text>
+  <text x="222" y="172" font-size="13" fill="#8a8a92">&#8635;5h</text>
+  <circle cx="282" cy="167" r="6.5" fill="#30d158"/>
+  <text x="296" y="172" font-size="15" fill="#ffffff">wk 8%</text>
+
+  <!-- legend -->
+  <circle cx="32" cy="219" r="6" fill="#30d158"/><text x="44" y="224" font-size="13" fill="#7a7a83">chill</text>
+  <circle cx="104" cy="219" r="6" fill="#ffcc00"/><text x="116" y="224" font-size="13" fill="#7a7a83">spicy</text>
+  <circle cx="182" cy="219" r="6" fill="#ff9f0a"/><text x="194" y="224" font-size="13" fill="#7a7a83">careful</text>
+  <circle cx="272" cy="219" r="6" fill="#ff453a"/><text x="284" y="224" font-size="13" fill="#7a7a83">about to bonk the limit</text>
+</svg>

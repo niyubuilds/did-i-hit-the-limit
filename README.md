@@ -2,6 +2,8 @@
 
 **A tiny macOS bar that shows how much of your Claude and Codex plan you've burned — pinned right onto the app window, so you stop alt-tabbing into Settings 47 times a day.**
 
+![Claude and Codex usage bars showing 5-hour and weekly limits](demo.svg)
+
 > *"Can I send one more message, or will it bonk the limit mid-thought?"* — you, daily, until now.
 
 ```
@@ -19,6 +21,14 @@ It floats at the top-right of the **Claude** and **Codex** desktop windows, foll
 🟢 chill → 🟡 spicy → 🟠 careful → 🔴 living dangerously
 
 ## Install (macOS)
+
+**Quick:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/niyubuilds/did-i-hit-the-limit/main/install.sh | bash
+```
+
+**Or clone first** (recommended — it touches your login, so feel free to read it before running):
 
 ```bash
 git clone https://github.com/niyubuilds/did-i-hit-the-limit.git

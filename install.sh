@@ -5,8 +5,9 @@
 set -e
 
 DEST="$HOME/.truehue-usage"
-SRC="$(cd "$(dirname "$0")" && pwd)"
+SRC="$(cd "$(dirname "$0")" 2>/dev/null && pwd || true)"
 PYBIN="$DEST/venv/bin/python3"
+REPO="https://github.com/niyubuilds/did-i-hit-the-limit.git"
 LA="$HOME/Library/LaunchAgents"
 b="\033[1m"; g="\033[1;32m"; y="\033[1;33m"; off="\033[0m"
 
@@ -14,6 +15,13 @@ b="\033[1m"; g="\033[1;32m"; y="\033[1;33m"; off="\033[0m"
 command -v python3 >/dev/null || { echo "Python 3 is required. Install it: brew install python (or python.org)"; exit 1; }
 
 echo -e "${b}truHue usage bars — installing…${off}"
+
+# 0) if run standalone (curl | bash), fetch the source first
+if [ -z "$SRC" ] || [ ! -f "$SRC/claude_overlay_app.py" ]; then
+  command -v git >/dev/null || { echo "git is required (run: xcode-select --install)"; exit 1; }
+  SRC="$HOME/.truehue-usage-src"; rm -rf "$SRC"
+  echo "  • fetching source…"; git clone --depth 1 "$REPO" "$SRC" >/dev/null 2>&1
+fi
 
 # 1) files → ~/.truehue-usage
 mkdir -p "$DEST"
