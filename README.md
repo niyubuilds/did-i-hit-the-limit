@@ -7,7 +7,7 @@
 > *"Can I send one more message, or will it bonk the limit mid-thought?"* — you, daily, until now.
 
 ```
-Claude   🟢 5h 10% ↻5h   🟢 wk 14%   💳 $2.38
+Claude   🟢 5h 10% ↻5h   🟢 wk 14%   💳 $238000
 Codex    🟢 5h 2%  ↻5h   🟢 wk 8%
 ```
 
