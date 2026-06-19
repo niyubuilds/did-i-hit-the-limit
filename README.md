@@ -2,7 +2,7 @@
 
 **A tiny macOS bar that shows how much of your Claude and Codex plan you've burned — pinned right onto the app window, so you stop alt-tabbing into Settings 47 times a day.**
 
-![Claude and Codex usage bars showing 5-hour and weekly limits](demo.svg)
+![Claude and Codex usage bars showing 5-hour and weekly limits](demo.png)
 
 > *"Can I send one more message, or will it bonk the limit mid-thought?"* — you, daily, until now.
 
