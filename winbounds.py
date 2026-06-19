@@ -89,6 +89,44 @@ def window_rect(owner_substr):
         _cf.CFRelease(info)
 
 
+def active_window_rect(owner_substr):
+    """Rect of owner's largest window, but ONLY when owner owns the TOPMOST
+    normal (layer-0) window on the current Space — i.e. the app is in front.
+
+    Determined entirely from the window stack, so it is immune to our own
+    overlay panel (which lives above layer 0 and is ignored here). This avoids
+    the feedback loop you get from NSWorkspace.frontmostApplication(), which our
+    panel pollutes the moment it's shown."""
+    info = _cg.CGWindowListCopyWindowInfo(_ON_SCREEN_ONLY | _EXCLUDE_DESKTOP, 0)
+    if not info:
+        return None
+    try:
+        sub = owner_substr.lower()
+        top_owner = None          # owner of the frontmost normal window
+        best, best_area = None, 0.0
+        for i in range(_cf.CFArrayGetCount(info)):
+            w = _cf.CFArrayGetValueAtIndex(info, i)
+            if int(_n(_cf.CFDictionaryGetValue(w, _K["kCGWindowLayer"]))) != 0:
+                continue
+            owner = _s(_cf.CFDictionaryGetValue(w, _K["kCGWindowOwnerName"])) or ""
+            if top_owner is None:
+                top_owner = owner
+            b = _cf.CFDictionaryGetValue(w, _K["kCGWindowBounds"])
+            if not b:
+                continue
+            wd = _n(_cf.CFDictionaryGetValue(b, _K["Width"]))
+            ht = _n(_cf.CFDictionaryGetValue(b, _K["Height"]))
+            if wd < 200 or ht < 120:
+                continue
+            if sub in owner.lower() and wd * ht > best_area:
+                x = _n(_cf.CFDictionaryGetValue(b, _K["X"]))
+                y = _n(_cf.CFDictionaryGetValue(b, _K["Y"]))
+                best, best_area = (x, y, wd, ht), wd * ht
+        return best if (top_owner is not None and sub in top_owner.lower()) else None
+    finally:
+        _cf.CFRelease(info)
+
+
 if __name__ == "__main__":
     for name in ("Claude", "Codex"):
-        print(name, "->", window_rect(name))
+        print(name, "-> rect", window_rect(name), "| active", active_window_rect(name))

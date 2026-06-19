@@ -199,13 +199,11 @@ class Controller(NSObject):
             self._wake.wait(self.cfg["poll_seconds"]); self._wake.clear()
 
     def tick_(self, _timer):
-        fa = NSWorkspace.sharedWorkspace().frontmostApplication()
-        front = bool(fa and fa.bundleIdentifier() == self.cfg["bundle_id"])
-        rect = winbounds.window_rect(self.cfg["owner"]) if front else None
-        state = (front, rect is not None)
-        if state != getattr(self, "_last_state", None):
-            self._last_state = state
-            print(f"[{self.cfg['name']}] front={front} window={'yes' if rect else 'NO'} rect={rect}", flush=True)
+        # show the bar only when the app owns the topmost normal window (in front)
+        rect = winbounds.active_window_rect(self.cfg["owner"])
+        if (rect is not None) != getattr(self, "_last_state", None):
+            self._last_state = rect is not None
+            print(f"[{self.cfg['name']}] active={rect is not None} rect={rect}", flush=True)
         if rect:
             if not self.dragging:
                 x = rect[0] + rect[2] - self.width - self.off_x
@@ -252,7 +250,7 @@ class Controller(NSObject):
             pass
 
     def recomputeOffset(self):
-        rect = winbounds.window_rect(self.cfg["owner"])
+        rect = winbounds.active_window_rect(self.cfg["owner"]) or winbounds.window_rect(self.cfg["owner"])
         if not rect:
             return
         f = self.panel.frame()
