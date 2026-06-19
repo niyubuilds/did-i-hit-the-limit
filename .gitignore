@@ -1,0 +1,7 @@
+# personal / generated — never share these
+.keycache
+*_offset.json
+*_pos.json
+__pycache__/
+*.pyc
+venv/

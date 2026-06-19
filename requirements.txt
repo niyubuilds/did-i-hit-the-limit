@@ -1,0 +1,4 @@
+pyobjc-core
+pyobjc-framework-Cocoa
+pycryptodome
+curl_cffi
