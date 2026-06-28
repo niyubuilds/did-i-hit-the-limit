@@ -31,6 +31,8 @@ PAD = 12.0            # horizontal padding inside the pill
 MARGIN_RIGHT = 14.0   # default gap from the window's right edge
 OFFSET_TOP = 5.0      # default gap below the window's top edge
 TICK = 0.3            # seconds — position-follow cadence
+SHOW_TICKS = 2        # consecutive on-screen reads before showing (debounce → no flash mid-Space-switch)
+HIDE_TICKS = 3        # consecutive misses before hiding (debounce → no flicker)
 
 SHORT = {"session": "5h", "weekly_all": "wk", "weekly_opus": "Opus",
          "weekly_sonnet": "Son", "weekly_cowork": "Cowork"}
@@ -94,6 +96,18 @@ def _primary_height():
         if f.origin.x == 0 and f.origin.y == 0:
             return f.size.height
     return NSScreen.mainScreen().frame().size.height
+
+
+def _pos_on_screen(x, y, w):
+    """True if the panel's center (Cocoa coords) lands on some real display.
+    Rejects the off-screen/garbage positions macOS reports mid-Space-animation."""
+    cx, cy = x + w / 2.0, y + PANEL_H / 2.0
+    for s in NSScreen.screens():
+        f = s.frame()
+        if (f.origin.x - 40 <= cx <= f.origin.x + f.size.width + 40 and
+                f.origin.y - 40 <= cy <= f.origin.y + f.size.height + 40):
+            return True
+    return False
 
 
 class DragView(NSView):
@@ -199,20 +213,30 @@ class Controller(NSObject):
             self._wake.wait(self.cfg["poll_seconds"]); self._wake.clear()
 
     def tick_(self, _timer):
-        # show the bar only when the app owns the topmost normal window (in front)
+        # candidate position: app owns the front window AND it lands on a real
+        # screen (rejects garbage coords macOS reports mid-Space-animation)
         rect = winbounds.active_window_rect(self.cfg["owner"])
-        if (rect is not None) != getattr(self, "_last_state", None):
-            self._last_state = rect is not None
-            print(f"[{self.cfg['name']}] active={rect is not None} rect={rect}", flush=True)
+        pos = None
         if rect:
-            if not self.dragging:
-                x = rect[0] + rect[2] - self.width - self.off_x
-                y = _primary_height() - rect[1] - PANEL_H - self.off_y
-                self.panel.setFrameOrigin_(NSMakePoint(x, y))
-            if not self.panel.isVisible():
-                self.panel.orderFront_(None)
-        elif self.panel.isVisible() and not self.dragging:
-            self.panel.orderOut_(None)
+            x = rect[0] + rect[2] - self.width - self.off_x
+            y = _primary_height() - rect[1] - PANEL_H - self.off_y
+            if _pos_on_screen(x, y, self.width):
+                pos = (x, y)
+        if pos:
+            self._hit = getattr(self, "_hit", 0) + 1; self._miss = 0
+        else:
+            self._miss = getattr(self, "_miss", 0) + 1; self._hit = 0
+        if not self.dragging:
+            if pos and self._hit >= SHOW_TICKS:          # debounced show, then follow
+                self.panel.setFrameOrigin_(NSMakePoint(pos[0], pos[1]))
+                if not self.panel.isVisible():
+                    self.panel.orderFront_(None)
+            elif self._miss >= HIDE_TICKS and self.panel.isVisible():
+                self.panel.orderOut_(None)
+        vis = self.panel.isVisible()
+        if vis != getattr(self, "_last_vis", None):
+            self._last_vis = vis
+            print(f"[{self.cfg['name']}] {'shown' if vis else 'hidden'} pos={pos}", flush=True)
 
         with self.lock:
             if not self.dirty:
