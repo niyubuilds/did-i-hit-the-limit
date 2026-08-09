@@ -35,7 +35,7 @@ chmod +x "$DEST"/run.sh "$DEST"/run-codex.sh 2>/dev/null || true
 echo "  • setting up Python environment…"
 [ -x "$PYBIN" ] || python3 -m venv "$DEST/venv"
 "$PYBIN" -m pip install --quiet --upgrade pip
-"$PYBIN" -m pip install --quiet pyobjc-core pyobjc-framework-Cocoa pycryptodome curl_cffi
+"$PYBIN" -m pip install --quiet pyobjc-core pyobjc-framework-Cocoa curl_cffi
 
 # 3) auto-start at login (launchd KeepAlive restarts on crash, not on Quit)
 mkdir -p "$LA"

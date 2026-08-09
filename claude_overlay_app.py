@@ -31,9 +31,8 @@ def render(status):
         r = core.reset(m.get("resets_at"))
         tip.append(f"{core.dot(pct, m.get('severity'))} {m['label']}: {pct}%{star}" + (f"   ·  {r}" if r else ""))
     if spend:
-        cur = "$" if spend.get("currency") == "USD" else (spend.get("currency", "") + " ")
-        parts.append(f"💳 {cur}{spend['used']:.2f}")
-        tip.append(f"💳 {spend['label']}: {cur}{spend['used']:.2f} / {cur}{spend['limit']:.2f} ({spend.get('percent')}%)")
+        parts.append(f"💳 {spend['percent']}%")
+        tip.append(f"💳 {spend['label']}: {spend['percent']}%")
     tip.append(f"⌨ Claude Code (this Mac): {core.htok(local.get('today_tokens'))} today · "
                f"{core.htok(local.get('week_tokens'))} 7d")
     at = (status or {}).get("at", "")

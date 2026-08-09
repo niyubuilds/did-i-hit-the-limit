@@ -110,6 +110,24 @@ def _pos_on_screen(x, y, w):
     return False
 
 
+def _clamp_to_screen(x, y, w):
+    """Keep the whole panel inside the visible area of its display, so a bad
+    offset or a window at the screen edge can never push it out of sight."""
+    cx, cy = x + w / 2.0, y + PANEL_H / 2.0
+    screens = list(NSScreen.screens())
+    if not screens:
+        return x, y
+    inside = next((s for s in screens
+                   if s.frame().origin.x <= cx <= s.frame().origin.x + s.frame().size.width
+                   and s.frame().origin.y <= cy <= s.frame().origin.y + s.frame().size.height), None)
+    s = inside or min(screens, key=lambda s: (s.frame().origin.x + s.frame().size.width / 2 - cx) ** 2
+                      + (s.frame().origin.y + s.frame().size.height / 2 - cy) ** 2)
+    vf = s.visibleFrame()
+    x = max(vf.origin.x, min(x, vf.origin.x + vf.size.width - w))
+    y = max(vf.origin.y, min(y, vf.origin.y + vf.size.height - PANEL_H))
+    return x, y
+
+
 class DragView(NSView):
     def initWithController_(self, ctrl):
         self = objc.super(DragView, self).initWithFrame_(NSMakeRect(0, 0, 200, PANEL_H))
@@ -221,7 +239,7 @@ class Controller(NSObject):
             x = rect[0] + rect[2] - self.width - self.off_x
             y = _primary_height() - rect[1] - PANEL_H - self.off_y
             if _pos_on_screen(x, y, self.width):
-                pos = (x, y)
+                pos = _clamp_to_screen(x, y, self.width)
         if pos:
             self._hit = getattr(self, "_hit", 0) + 1; self._miss = 0
         else:

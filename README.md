@@ -36,7 +36,7 @@ cd did-i-hit-the-limit
 ./install.sh
 ```
 
-One keychain tap on first run (your own login), then it lives in your title bar forever and auto-starts at login. **Drag** to move it, **right-click** to quit. No Python? `brew install python`.
+It lives in your title bar and auto-starts at login — **no login prompts**. **Drag** to move it, **right-click** to quit. No Python? `brew install python`.
 
 ## Who this is for
 
@@ -45,7 +45,7 @@ You pay for **Claude Pro/Max** or **ChatGPT/Codex**, you use the desktop apps, a
 ## FAQ (a.k.a. what you actually searched for)
 
 - **How do I see my Claude usage limit on a Mac?** → This. Live 5-hour + weekly usage, right on the Claude window.
-- **When does my Claude / Codex 5-hour limit reset?** → The `↻` countdown on the bar.
+- **When does my Codex 5-hour limit reset?** → The `↻` countdown on the Codex bar.
 - **Is there a Claude usage tracker / rate-limit monitor?** → You found it.
 - **Does it work for Codex / the ChatGPT plan too?** → Yep, same bar, its own window.
 - **Can I see my Claude Code token usage?** → Hover the Claude bar.
@@ -54,10 +54,10 @@ You pay for **Claude Pro/Max** or **ChatGPT/Codex**, you use the desktop apps, a
 
 It reads the **same data the apps already show you**, using **your own logged-in session**, and talks **only** to Anthropic's and OpenAI's own servers:
 
-- **Claude** → decrypts the `claude.ai` cookies the app stores (via your macOS keychain) → calls `claude.ai/api/.../usage`
-- **Codex** → reads the token in `~/.codex/auth.json` → calls `chatgpt.com/backend-api/wham/usage`
+- **Claude** → reads the usage the Claude app already records on disk (`plan-usage-history.json`). No cookies, no keychain, no network.
+- **Codex** → reads the token in `~/.codex/auth.json` → calls `chatgpt.com/backend-api/wham/usage`.
 
-No telemetry, no third-party servers, no sign-up. It's a few hundred lines of readable Python — skim it before you run it. Your keychain key is cached locally (`chmod 600`) and never leaves your Mac.
+No telemetry, no third-party servers, no sign-up. It's a few hundred lines of readable Python — skim it before you run it. Everything stays on your Mac.
 
 ## Uninstall
 
